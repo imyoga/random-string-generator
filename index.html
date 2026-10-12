@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Random Alphanumeric Generator</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f1f5f9;
+      color: #1e293b;
+      padding: 20px;
+    }
+    .card {
+      background: #ffffff;
+      padding: 32px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      width: 100%;
+      max-width: 440px;
+      text-align: center;
+    }
+    h2 {
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+    p.subtitle {
+      font-size: 13px;
+      color: #64748b;
+      margin-bottom: 24px;
+    }
+    .input-group {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .input-group input {
+      width: 65px;
+      padding: 8px 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 15px;
+      outline: none;
+    }
+    .input-group input:focus {
+      border-color: #3b82f6;
+    }
+    .result-box {
+      background: #f8fafc;
+      border: 2px dashed #cbd5e1;
+      border-radius: 10px;
+      padding: 16px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 24px;
+      font-weight: bold;
+      color: #0f172a;
+      letter-spacing: 2px;
+      word-break: break-all;
+      margin-bottom: 20px;
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .actions {
+      display: flex;
+      gap: 10px;
+    }
+    button {
+      flex: 1;
+      padding: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-primary {
+      background: #2563eb;
+      color: #ffffff;
+    }
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
+    .btn-secondary {
+      background: #e2e8f0;
+      color: #334155;
+    }
+    .btn-secondary:hover {
+      background: #cbd5e1;
+    }
+    .toast {
+      margin-top: 14px;
+      font-size: 13px;
+      color: #16a34a;
+      font-weight: 500;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .toast.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h2>Random String Generator</h2>
+    <p class="subtitle">Lowercase alphanumeric (a-z, 0-9) • Repetitions allowed</p>
+
+    <div class="input-group">
+      <label for="strLength">Length:</label>
+      <input type="number" id="strLength" value="8" min="1" max="128" />
+    </div>
+
+    <div class="result-box" id="result">--------</div>
+
+    <div class="actions">
+      <button class="btn-primary" onclick="generateString()">Generate</button>
+      <button class="btn-secondary" onclick="copyToClipboard()">Copy</button>
+    </div>
+
+    <div class="toast" id="toast">Copied to clipboard!</div>
+  </div>
+
+  <script>
+    const CHARS = 'abcdefghijklmnopqrstuvwxyz0123456789';
+
+    function generateRandomString(length) {
+      let result = '';
+      const charsLength = CHARS.length;
+      for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * charsLength);
+        result += CHARS.charAt(randomIndex);
+      }
+      return result;
+    }
+
+    function generateString() {
+      const lengthInput = document.getElementById('strLength');
+      let length = parseInt(lengthInput.value, 10);
+      
+      if (isNaN(length) || length < 1) length = 8;
+      if (length > 128) length = 128;
+      lengthInput.value = length;
+
+      const randomStr = generateRandomString(length);
+      document.getElementById('result').textContent = randomStr;
+    }
+
+    function copyToClipboard() {
+      const text = document.getElementById('result').textContent;
+      if (!text || text.includes('-')) return;
+
+      navigator.clipboard.writeText(text).then(() => {
+        const toast = document.getElementById('toast');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2000);
+      });
+    }
+
+    window.onload = generateString;
+  </script>
+</body>
+</html>
